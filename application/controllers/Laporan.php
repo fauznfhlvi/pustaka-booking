@@ -80,10 +80,10 @@ class Laporan extends CI_Controller
 
         $this -> load->view('user/laporan_print_anggota',$data);
     }
-    public function laporan_anggota_pdf()
-    {
+    public function laporan_pdf_anggota()
+    {   $this->db->where('role_id = 2');
         $data['anggota'] = $this->db->get('user')->result_array();
-        // $this->load->library('dompdf_gen');
+        //$this->load->library('dompdf_gen');
         $sroot = $_SERVER['DOCUMENT_ROOT'];
         include $sroot . "/pustaka-booking/application/third_party/dompdf/autoload.inc.php";
         
@@ -105,9 +105,10 @@ class Laporan extends CI_Controller
     }
     public function export_excel_anggota() 
     {
-        $this->db->where('role_id', 2);
-        $data['anggota'] = $this->db->get('user')->result_array(); 
-        $this->load->view('user/export_excel_anggota', $data); 
+        $data['user'] = $this->Modeluser->cekData(['email' => $this->session->userdata('email')])->row_array();
+        $data = array( 'title' => 'Laporan Data anggota Buku', 
+                       'laporan' => $this->db->query("SELECT * FROM user Where role_id = 2")->result_array()); 
+        $this->load->view('user/export-excel-anggota', $data); 
     }
     public function laporan_pinjam() 
 { 
